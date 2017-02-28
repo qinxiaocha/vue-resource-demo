@@ -25,6 +25,7 @@
         {{post.body}}
       </div>
     </div>
+    <div>{{fetch}}</div>
     <router-view></router-view>
   </div>
   </transition>
@@ -41,11 +42,29 @@ export default {
       loading: false,
       post: null,
       error: null,
-      fetch: ''
+      fetch: '',
+      content: ''
     }
   },
   created () {
     this.fetchData()
+  },
+  ready () {
+    this.$http.jsonp({
+      url: 'https://cnodejs.org/api/v1/topic/5433d5e4e737cbe96dcef312',
+      method: 'POST',
+      emulateJSON: true,
+      data: {
+        robot: 123,
+        phone: '13881119614',
+        password: 'menji111',
+        usertype: 0
+      }
+    }).then(function (response) {
+      console.log(response.data)
+    }, function (response) {
+
+    })
   },
   watch: {
     '$route': 'fetchData'
@@ -54,9 +73,6 @@ export default {
     fetchData: function () {
       this.error = this.post = null
       this.loading = true
-      this.$http.get('https://cnodejs.org/api/v1/topic/5433d5e4e737cbe96dcef312').then(response => {
-        this.fetch = response.body
-      })
     }
   }
 }
